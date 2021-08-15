@@ -1,5 +1,7 @@
+package crackingTheCodeInterview.linkedLists;
+
 public class Node {
-    Node next = null;
+    Node next;
     int data;
 
     public Node(int data) {
