@@ -1,5 +1,7 @@
 package crackingTheCodeInterview.linkedLists;
 
+import com.sun.xml.internal.ws.wsdl.writer.document.Part;
+
 import java.util.HashSet;
 
 /**
@@ -15,7 +17,7 @@ public class SumLists {
     }
 
     private static Node addList(Node a, Node b, int carry) {
-        if(a == null && b == null && carry == 0) {
+        if (a == null && b == null && carry == 0) {
             return null;
         }
 
@@ -41,7 +43,68 @@ public class SumLists {
         return result;
     }
 
+    private static Node addListsInForwardOrder(Node a, Node b) {
+        int aLength = length(a);
+        int bLength = length(b);
 
+        if (aLength < bLength) {
+            a = padList(a, bLength - aLength);
+        } else {
+            b = padList(b, aLength - bLength);
+        }
+
+        PartialSum sum = addListHelper(a, b);
+
+        if (sum.carry == 0) {
+            return sum.sum;
+        }
+
+        return insertBefore(sum.sum, sum.carry);
+
+    }
+
+    private static Node padList(Node list, int padding) {
+        Node head = list;
+        for (int i = 0; i < padding; i++) {
+            head = insertBefore(head, 0);
+        }
+        return head;
+    }
+
+    private static Node insertBefore(Node list, int data) {
+        Node node = new Node(data);
+        if (list != null) {
+            node.next = list;
+        }
+
+        return node;
+    }
+
+    private static int length(Node list) {
+        int length = 0;
+
+        while (list != null) {
+            length++;
+            list = list.next;
+        }
+        return length;
+    }
+
+    private static PartialSum addListHelper(Node a, Node b) {
+        if (a == null && b == null) {
+            return new PartialSum();
+        }
+
+        PartialSum sum = addListHelper(a.next, b.next);
+
+        int val = sum.carry + a.data + b.data;
+
+        Node result = insertBefore(sum.sum, val % 10);
+
+        sum.sum = result;
+        sum.carry = val / 10;
+        return sum;
+    }
 
     public static void main(String[] args) {
         Node n1 = new Node(7);
@@ -64,8 +127,28 @@ public class SumLists {
         System.out.println("\nResult: ");
         Node.print(sumLists(n1, m1));
 
+
+        n1 = new Node(7);
+        n2 = new Node(1);
+        n3 = new Node(6);
+        n1.next = n2;
+        n2.next = n3;
+
+        m1 = new Node(5);
+        m2 = new Node(9);
+        m3 = new Node(2);
+        m1.next = m2;
+        m2.next = m3;
         System.out.println("\n*** In forward order ***");
+        Node.print(addListsInForwardOrder(n1, m1));
 
     }
 
 }
+
+
+class PartialSum {
+    public Node sum = null;
+    public int carry = 0;
+}
+
