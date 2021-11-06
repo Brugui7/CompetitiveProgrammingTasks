@@ -1,9 +1,5 @@
 package crackingTheCodeInterview.linkedLists;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.Part;
-
-import java.util.HashSet;
-
 /**
  * You hace two numbers represented by a linked list, where each node contains a single digit.
  * The digits are stored in reverse order, such that the 1's dignit is at the head of the list.
@@ -33,11 +29,7 @@ public class SumLists {
 
         Node result = new Node(value % 10);
         if (a != null || b != null) {
-            result.next = addList(
-                    a != null ? a.next : null,
-                    b != null ? b.next : null,
-                    value > 10 ? 1 : 0
-            );
+            result.next = addList(a != null ? a.next : null, b != null ? b.next : null, value > 10 ? 1 : 0);
         }
 
         return result;
